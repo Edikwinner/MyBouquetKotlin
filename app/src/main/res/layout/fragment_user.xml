@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".fragments.UserFragment">
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:padding="20dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+            <TextView
+                android:gravity="end"
+                android:layout_marginBottom="15dp"
+                android:id="@+id/currentEmail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+            <TextView
+                android:layout_marginBottom="15dp"
+                android:id="@+id/currentPhone"
+                android:gravity="end"
+                android:text="Вы еще не сохранили номер телефона"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+            <EditText
+                android:layout_marginBottom="15dp"
+                android:id="@+id/inputPhoneNumberUser"
+                android:hint="Введите ваш номер телефона"
+                android:gravity="end"
+                android:inputType="phone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+            <Button
+                android:layout_marginBottom="15dp"
+                android:id="@+id/savePhoneNumber"
+                android:text="Сохранить номер телефона"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+            <Button
+                android:id="@+id/logOff"
+                android:layout_gravity="center"
+                android:text="Выйти из аккаунта"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/red"/>
+        </LinearLayout>
+    </ScrollView>
+
+</FrameLayout>

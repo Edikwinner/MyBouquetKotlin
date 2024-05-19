@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/home_screen"
+        android:icon="@drawable/home"/>
+    <item
+        android:id="@+id/favourite_screen"
+        android:icon="@drawable/favorite"/>
+    <item
+        android:id="@+id/custom_bouquet_screen"
+        android:icon="@drawable/add" />
+    <item
+        android:id="@+id/shopping_card_screen"
+        android:icon="@drawable/shopping_cart"/>
+    <item
+        android:id="@+id/profile_screen"
+        android:icon="@drawable/user"/>
+
+
+
+</menu>
