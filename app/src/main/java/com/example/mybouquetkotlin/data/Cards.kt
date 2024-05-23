@@ -59,6 +59,7 @@ class Cards : Serializable {
     }
 
     fun addPhoneNumberToUser(phoneNumber: String?) {
+        this.phoneNumber = phoneNumber
         firestore!!.collection("users")
             .document(UID!!)
             .update("phoneNumber", phoneNumber)

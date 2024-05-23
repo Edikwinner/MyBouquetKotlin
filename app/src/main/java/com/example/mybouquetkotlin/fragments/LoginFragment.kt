@@ -27,7 +27,7 @@ class LoginFragment() : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (getArguments() != null) {
-            cards = getArguments()!!.get("cards") as Cards?
+            cards = requireArguments().get("cards") as Cards?
         }
     }
 
@@ -43,13 +43,17 @@ class LoginFragment() : Fragment() {
             .findViewById<View>(R.id.create_new_user)
             .setOnClickListener(object : View.OnClickListener {
                 override fun onClick(v: View) {
-                    createNewUser(email.getText().toString(), password.getText().toString())
+                    if (!email.text.toString().isEmpty() && !password.text.toString().isEmpty()) {
+                        createNewUser(email.text.toString(), password.text.toString())
+                    }
                 }
             })
 
         RootView.findViewById<View>(R.id.sign_in).setOnClickListener(object : View.OnClickListener {
             override fun onClick(v: View) {
-                signIn(email.getText().toString(), password.getText().toString())
+                if (!email.text.toString().isEmpty() && !password.text.toString().isEmpty()) {
+                    signIn(email.text.toString(), password.text.toString())
+                }
             }
         })
         return RootView
