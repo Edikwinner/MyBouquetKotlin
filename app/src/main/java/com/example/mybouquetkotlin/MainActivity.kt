@@ -174,7 +174,7 @@ class MainActivity() : AppCompatActivity() {
             })
     }
 
-    fun setFirestore() {
+   /* fun setFirestore() {
         val bouquets: MutableList<Card> = ArrayList()
         bouquets.add(
             Card(
@@ -246,5 +246,5 @@ class MainActivity() : AppCompatActivity() {
         for (card: Card? in bouquets) {
             firestore!!.collection("bouquets").add((card)!!)
         }
-    }
+    }*/
 }

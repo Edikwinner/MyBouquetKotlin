@@ -22,16 +22,16 @@ class DescriptionFragment() : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (getArguments() != null) {
-            card = getArguments()!!.get("card") as Card?
-            cards = getArguments()!!.get("cards") as Cards?
-            fragment = getArguments()!!.getString("fragment")
+            card = requireArguments().get("card") as Card?
+            cards = requireArguments().get("cards") as Cards?
+            fragment = requireArguments().getString("fragment")
         }
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         var isLiked: Boolean = false
         var isShop: Boolean = false
 

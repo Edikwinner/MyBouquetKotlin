@@ -16,7 +16,7 @@ class AddFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (arguments != null) {
-            cards = arguments!!["cards"] as Cards?
+            cards = requireArguments()["cards"] as Cards?
         }
     }
 

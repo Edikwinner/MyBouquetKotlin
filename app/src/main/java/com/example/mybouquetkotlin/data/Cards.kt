@@ -6,15 +6,15 @@ import com.google.firebase.firestore.FirebaseFirestore
 import java.io.Serializable
 
 
-class Cards : Serializable {
-    var UID: String? = null
-    var cards: MutableList<Card?> = ArrayList()
-    var favouriteCards: MutableList<Card?> = ArrayList()
-    var toShoppingCartCards: MutableList<Card?> = ArrayList()
-    var ordersList: List<String> = ArrayList()
-    var phoneNumber: String? = ""
-    var firestore: FirebaseFirestore? = null
-    var firebaseAuth: FirebaseAuth? = null
+data class Cards(var UID: String? = null,
+                 var cards: MutableList<Card?> = ArrayList(),
+                 var favouriteCards: MutableList<Card?> = ArrayList(),
+                 var toShoppingCartCards: MutableList<Card?> = ArrayList(),
+                 var ordersList: List<String> = ArrayList(),
+                 var phoneNumber: String? = "",
+                 var firestore: FirebaseFirestore? = null,
+                 var firebaseAuth: FirebaseAuth? = null) : Serializable {
+
     fun addCardToFavouriteCards(card: Card?) {
         firestore!!.collection("users")
             .document(UID!!)
