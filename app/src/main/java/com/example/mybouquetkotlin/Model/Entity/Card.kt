@@ -1,4 +1,4 @@
-package com.example.mybouquetkotlin.data
+package com.example.mybouquetkotlin.Model.Entity
 
 import java.io.Serializable
 

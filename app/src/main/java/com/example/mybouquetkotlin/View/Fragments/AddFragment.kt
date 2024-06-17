@@ -1,23 +1,24 @@
-package com.example.mybouquetkotlin.fragments
+package com.example.mybouquetkotlin.View.Fragments
 
 import android.os.Bundle
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import com.example.mybouquetkotlin.R
-import com.example.mybouquetkotlin.data.Cards
+import com.example.mybouquetkotlin.Model.Cards
+import com.example.mybouquetkotlin.ViewModel.Fragments.AddViewModel
 
 class AddFragment : Fragment() {
-    private var cards: Cards? = null
+    private lateinit var viewModel:AddViewModel
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        if (arguments != null) {
-            cards = requireArguments()["cards"] as Cards?
-        }
+
     }
 
     override fun onCreateView(
@@ -25,7 +26,18 @@ class AddFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val rootView = inflater.inflate(R.layout.fragment_add, container, false)
+        viewModel = ViewModelProvider(this)[AddViewModel::class.java]
+        val descriptionEditText = rootView.findViewById<EditText>(R.id.bouquet_description_custom_bouquet)
 
+        val makeOrder = rootView.findViewById<Button>(R.id.add_custom_order)
+
+        makeOrder.setOnClickListener {
+            //verify data
+            viewModel.makeOrder(descriptionEditText.text.toString())
+            descriptionEditText.text = null
+            Toast.makeText(context, "thx", Toast.LENGTH_SHORT).show()
+        }
+/*
         val bouquetDescription =
             rootView.findViewById<EditText>(R.id.bouquet_description_custom_bouquet)
         rootView.findViewById<View>(R.id.add_custom_order).setOnClickListener {
@@ -52,7 +64,7 @@ class AddFragment : Fragment() {
             )
             toast.setGravity(Gravity.CENTER, 0, 0)
             toast.show()
-        }
+        }*/
         return rootView
     }
 }

@@ -1,4 +1,4 @@
-package com.example.mybouquetkotlin.fragments
+package com.example.mybouquetkotlin.View.Fragments
 
 import android.net.Uri
 import android.os.Bundle
@@ -10,33 +10,26 @@ import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import com.example.mybouquetkotlin.R
-import com.example.mybouquetkotlin.data.Card
-import com.example.mybouquetkotlin.data.Cards
+import com.example.mybouquetkotlin.Model.Entity.Card
+import com.example.mybouquetkotlin.Model.Cards
+import com.example.mybouquetkotlin.ViewModel.Fragments.DescriptionViewModel
 import com.squareup.picasso.Picasso
 
 class DescriptionFragment() : Fragment() {
-    private var card: Card? = null
-    private var cards: Cards? = null
-    var fragment: String? = null
+    private lateinit var viewModel:DescriptionViewModel
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        if (getArguments() != null) {
-            card = requireArguments().get("card") as Card?
-            cards = requireArguments().get("cards") as Cards?
-            fragment = requireArguments().getString("fragment")
-        }
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        var isLiked: Boolean = false
-        var isShop: Boolean = false
-
         val rootView: View = inflater.inflate(R.layout.fragment_description, container, false)
-        val bouquetName: TextView = rootView.findViewById(R.id.bouquet_name_description)
+        viewModel = ViewModelProvider(this)[DescriptionViewModel::class.java]
+       /* val bouquetName: TextView = rootView.findViewById(R.id.bouquet_name_description)
         val bouquetDescription: TextView = rootView.findViewById(R.id.bouquet_description)
         val bouquetImage: ImageView = rootView.findViewById(R.id.bouquet_image_description)
 
@@ -133,7 +126,7 @@ class DescriptionFragment() : Fragment() {
         })
 
 
-
+*/
         return rootView
     }
 }

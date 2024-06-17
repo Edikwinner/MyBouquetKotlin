@@ -1,4 +1,4 @@
-package com.example.mybouquetkotlin.fragments
+package com.example.mybouquetkotlin.View.Fragments
 
 import android.content.DialogInterface
 import android.os.Bundle
@@ -7,40 +7,80 @@ import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.mybouquetkotlin.Model.Adapters.HomeScreenAdapter
 import com.example.mybouquetkotlin.R
-import com.example.mybouquetkotlin.data.Card
-import com.example.mybouquetkotlin.data.Cards
-import com.example.mybouquetkotlin.recycler_view_shopping_cart_screen.ShoppingCartScreenAdapter
+import com.example.mybouquetkotlin.Model.Entity.Card
+import com.example.mybouquetkotlin.Model.Cards
+import com.example.mybouquetkotlin.Model.Adapters.ShoppingCartScreenAdapter
+import com.example.mybouquetkotlin.ViewModel.Fragments.ShoppingCardViewModel
+import com.google.android.material.button.MaterialButton
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.firebase.auth.FirebaseAuth
 
-class ShoppingCardFragment() : Fragment() {
-    var totalCost: Int = 0
+class ShoppingCardFragment() : Fragment(), ShoppingCartScreenAdapter.customOnClickListener {
+    private lateinit var viewModel:ShoppingCardViewModel
+
+    /*var totalCost: Int = 0
     private lateinit var totalCostTextView: TextView
     private var cards: Cards? = null
     private var firebaseAuth: FirebaseAuth? = null
     private lateinit var recyclerView: RecyclerView
-    private lateinit var shoppingCartScreenAdapter: ShoppingCartScreenAdapter
+    private lateinit var shoppingCartScreenAdapter: ShoppingCartScreenAdapter*/
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        if (getArguments() != null) {
-            cards = requireArguments().get("cards") as Cards?
-        }
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         val rootView: View = inflater.inflate(R.layout.fragment_shopping_card, container, false)
-        totalCost = 0
+        viewModel = ViewModelProvider(this)[ShoppingCardViewModel::class.java]
+        val recyclerView = rootView.findViewById<RecyclerView>(R.id.shopping_card_recycler_view)
+        val makeOrderButton = rootView.findViewById<Button>(R.id.make_order)
+        val deleteAllButton = rootView.findViewById<View>(R.id.delete_all_shopping_cart)
+        val totalCostTextView = rootView.findViewById<TextView>(R.id.total_cost_in_shopping_cart)
+
+        viewModel.totalSum.observe(viewLifecycleOwner, Observer {
+            totalCostTextView.text = it.toString()
+        })
+        recyclerView.setLayoutManager(LinearLayoutManager(context))
+        viewModel.shoppingCards.observe(viewLifecycleOwner, Observer {
+            if(it != null){
+                recyclerView.adapter = ShoppingCartScreenAdapter(it)
+            }
+
+        })
+
+        makeOrderButton.setOnClickListener {
+
+        }
+
+        deleteAllButton.setOnClickListener{
+
+        }
+
+
+        return rootView
+    }
+
+    override fun deleteCard(card: Card?) {
+
+    }
+}
+     /*   totalCost = 0
         if (cards!!.UID == null) {
             val toast: Toast = Toast.makeText(
                 getContext(),
@@ -56,7 +96,7 @@ class ShoppingCardFragment() : Fragment() {
         firebaseAuth = cards!!.firebaseAuth
 
 
-        recyclerView = rootView.findViewById(R.id.shopping_card_recycler_view)
+
         recyclerView.setLayoutManager(LinearLayoutManager(getContext()))
 
         for (card: Card? in cards!!.toShoppingCartCards) {
@@ -163,6 +203,4 @@ class ShoppingCardFragment() : Fragment() {
             }
         }
 
-        return ItemTouchHelper(simpleItemTouchCallback)
-    }
-}
+        return ItemTouchHelper(simpleItemTouchCallback)*/

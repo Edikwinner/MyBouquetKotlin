@@ -1,42 +1,55 @@
-package com.example.mybouquetkotlin.fragments
+package com.example.mybouquetkotlin.View.Fragments
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import com.example.mybouquetkotlin.R
-import com.example.mybouquetkotlin.data.Card
-import com.example.mybouquetkotlin.data.Cards
-import com.example.mybouquetkotlin.data.User
-import com.google.android.gms.tasks.OnCompleteListener
-import com.google.android.gms.tasks.OnSuccessListener
-import com.google.android.gms.tasks.Task
-import com.google.firebase.auth.AuthResult
-import com.google.firebase.firestore.DocumentSnapshot
-import com.google.firebase.firestore.QueryDocumentSnapshot
-import com.google.firebase.firestore.QuerySnapshot
+import com.example.mybouquetkotlin.ViewModel.Fragments.LoginViewModel
 
 class LoginFragment() : Fragment() {
-    private var cards: Cards? = null
-
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        if (getArguments() != null) {
-            cards = requireArguments().get("cards") as Cards?
-        }
-    }
+    private lateinit var viewModel:LoginViewModel
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        val RootView: View = inflater.inflate(R.layout.fragment_login, container, false)
+    ): View {
+        val rootView: View = inflater.inflate(R.layout.fragment_login, container, false)
+        viewModel = ViewModelProvider(this)[LoginViewModel::class.java]
+        val emailTextView = rootView.findViewById<EditText>(R.id.input_email)
+        val passwordTextView = rootView.findViewById<EditText>(R.id.input_password)
+        val loginButton = rootView.findViewById<Button>(R.id.sign_in)
+        val registerButton = rootView.findViewById<Button>(R.id.create_new_user)
+        viewModel.mainActivityViewModel.currentUser.observe(viewLifecycleOwner, Observer {
+            if(it != null){
+                requireActivity()
+                    .supportFragmentManager
+                    .beginTransaction()
+                    .replace(R.id.fragment, UserFragment())
+                    .commit()
+            }
+        })
+        loginButton.setOnClickListener {
+            //verify data
+            viewModel.signIn(emailTextView.text.toString(), passwordTextView.text.toString())
+        }
 
+        registerButton.setOnClickListener {
+            //verify data
+            viewModel.createUser(emailTextView.text.toString(), passwordTextView.text.toString())
+        }
+        return rootView
+    }
+}
+
+        /*
         val email: EditText = RootView.findViewById(R.id.input_email)
         val password: EditText = RootView.findViewById(R.id.input_password)
         RootView
@@ -185,6 +198,4 @@ class LoginFragment() : Fragment() {
                             })
                     }
                 }
-            })
-    }
-}
+            })*/

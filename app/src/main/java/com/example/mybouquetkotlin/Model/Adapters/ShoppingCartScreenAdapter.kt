@@ -1,4 +1,4 @@
-package com.example.mybouquetkotlin.recycler_view_shopping_cart_screen
+package com.example.mybouquetkotlin.Model.Adapters
 
 import android.net.Uri
 import android.view.LayoutInflater
@@ -7,8 +7,8 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.example.mybouquetkotlin.Model.Entity.Card
 import com.example.mybouquetkotlin.R
-import com.example.mybouquetkotlin.data.Card
 import com.squareup.picasso.Picasso
 
 class ShoppingCartScreenAdapter(private val cards: List<Card?>?) :

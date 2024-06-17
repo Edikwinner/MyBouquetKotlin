@@ -1,8 +1,6 @@
-package com.example.mybouquetkotlin.fragments
+package com.example.mybouquetkotlin.View.Fragments
 
 import android.os.Bundle
-import android.util.Log
-import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,32 +8,55 @@ import android.widget.Button
 import android.widget.ImageButton
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mybouquetkotlin.R
-import com.example.mybouquetkotlin.data.Card
-import com.example.mybouquetkotlin.data.Cards
-import com.example.mybouquetkotlin.data.User
-import com.example.mybouquetkotlin.recycler_view_home_screen.HomeScreenAdapter
-import com.google.android.gms.tasks.OnSuccessListener
-import com.google.firebase.firestore.DocumentSnapshot
+import com.example.mybouquetkotlin.Model.Entity.Card
+import com.example.mybouquetkotlin.Model.Adapters.HomeScreenAdapter
+import com.example.mybouquetkotlin.ViewModel.Fragments.FavouriteViewModel
 
-class FavouriteFragment() : Fragment() {
-    private var cards: Cards? = null
+class FavouriteFragment() : Fragment(), HomeScreenAdapter.customListener {
+    private lateinit var viewModel: FavouriteViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        if (getArguments() != null) {
-            cards = requireArguments().get("cards") as Cards?
-        }
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         val rootView: View = inflater.inflate(R.layout.fragment_favourite, container, false)
-        if (cards!!.UID == null) {
+        viewModel = ViewModelProvider(this)[FavouriteViewModel::class.java]
+        val recyclerView: RecyclerView = rootView.findViewById(R.id.favourite_screen_recycler_view)
+        recyclerView.setLayoutManager(GridLayoutManager(context, 2))
+        viewModel.favouriteCards.observe(viewLifecycleOwner, Observer {
+            if(it == null){
+                Toast.makeText(context, "Some text", Toast.LENGTH_SHORT).show()
+            }
+            else {
+               recyclerView.adapter = HomeScreenAdapter(it, this)
+            }
+        })
+        return rootView
+    }
+
+    override fun onFavouriteButtonClicked(card: Card, button: ImageButton) {
+        TODO("Not yet implemented")
+    }
+
+    override fun onAddToShoppingCartClicked(card: Card, button: Button, button2: Button) {
+        TODO("Not yet implemented")
+    }
+
+    override fun onCardViewClicked(card: Card) {
+        TODO("Not yet implemented")
+    }
+}
+
+        /*if (cards!!.UID == null) {
             val toast: Toast = Toast.makeText(
                 getContext(),
                 "Для просмотра избранных букетов необходимо зарегистрироваться",
@@ -44,8 +65,7 @@ class FavouriteFragment() : Fragment() {
             toast.setGravity(Gravity.CENTER, 0, 0)
             toast.show()
         }
-        val recyclerView: RecyclerView = rootView.findViewById(R.id.favourite_screen_recycler_view)
-        recyclerView.setLayoutManager(GridLayoutManager(getContext(), 2))
+
 
         val homeScreenAdapter: HomeScreenAdapter = HomeScreenAdapter(cards!!.favouriteCards)
 
@@ -131,7 +151,5 @@ class FavouriteFragment() : Fragment() {
         })
         homeScreenAdapter.setFavouriteCards(cards!!.favouriteCards)
         homeScreenAdapter.setShoppingCards(cards!!.toShoppingCartCards)
-        recyclerView.setAdapter(homeScreenAdapter)
-        return rootView
-    }
-}
+
+        return rootView */
