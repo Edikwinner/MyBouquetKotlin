@@ -1,43 +1,50 @@
 package com.example.mybouquetkotlin.ViewModel.Fragments
 
-import android.widget.Button
-import android.widget.ImageButton
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.mybouquetkotlin.Model.Adapters.ShoppingCartScreenAdapter
 import com.example.mybouquetkotlin.Model.Entity.Card
 import com.example.mybouquetkotlin.Model.Entity.User
 import com.example.mybouquetkotlin.Model.Repository.CardRepository
-import com.example.mybouquetkotlin.View.Fragments.ShoppingCardFragment
-import com.example.mybouquetkotlin.ViewModel.Activities.MainActivityViewModel
 import kotlinx.coroutines.launch
 
-class ShoppingCardViewModel: ViewModel(), ShoppingCartScreenAdapter.customOnClickListener {
-    val mainActivityViewModel = MainActivityViewModel()
-    val cardRepository = CardRepository()
-    var shoppingCards = MutableLiveData<List<Card>>()
-    val totalSum = MutableLiveData<Int>()
+class ShoppingCardViewModel: ViewModel(){
 
-    val scope = viewModelScope.launch {
-        shoppingCards.value =
-            cardRepository.getShoppingCards(mainActivityViewModel.currentUser.value)
-        if (shoppingCards.value != null){
-            for (card in shoppingCards.value!!) {
-                totalSum.value = card.bouquetCost + totalSum.value!!
-            }
+    val totalSum = MutableLiveData<Int>()
+    val cardRepository = CardRepository()
+    val currentUser = MutableLiveData<User?>()
+    val shoppingCards = MutableLiveData<ArrayList<Card>>(ArrayList())
+
+    init {
+        viewModelScope.launch {
+            currentUser.value = cardRepository.getUser()
+            shoppingCards.value = cardRepository.getShoppingCards(currentUser.value)
         }
     }
 
-    fun makeOrder(paths: List<String>){
-        val scope = viewModelScope.launch {
+    fun makeOrder(paths: ArrayList<String>){
+        viewModelScope.launch {
             for (path in paths) {
                 cardRepository.makeOrder(path)
             }
         }
     }
+    fun deleteCard(card: Card) {
+        shoppingCards.value!!.remove(card)
+        cardRepository.deleteCardFromShoppingCards(card)
+    }
 
-    override fun deleteCard(card: Card?) {
+    fun deleteCards(){
+        for (card in this.shoppingCards.value!!){
+            cardRepository.deleteCardFromShoppingCards(card)
+        }
+        this.shoppingCards.value = ArrayList()
+    }
 
+    fun refreshData(){
+        viewModelScope.launch {
+            currentUser.value = cardRepository.getUser()
+            shoppingCards.value = cardRepository.getShoppingCards(currentUser.value)
+        }
     }
 }

@@ -1,42 +1,34 @@
 package com.example.mybouquetkotlin.View.Fragments
 
 import android.os.Bundle
-import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.EditText
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import com.example.mybouquetkotlin.R
-import com.example.mybouquetkotlin.Model.Cards
 import com.example.mybouquetkotlin.ViewModel.Fragments.AddViewModel
+import com.example.mybouquetkotlin.databinding.FragmentAddBinding
 
 class AddFragment : Fragment() {
     private lateinit var viewModel:AddViewModel
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-    }
-
+    private lateinit var binding: FragmentAddBinding
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        val rootView = inflater.inflate(R.layout.fragment_add, container, false)
+    ): View {
+        binding = FragmentAddBinding.inflate(inflater)
         viewModel = ViewModelProvider(this)[AddViewModel::class.java]
-        val descriptionEditText = rootView.findViewById<EditText>(R.id.bouquet_description_custom_bouquet)
 
-        val makeOrder = rootView.findViewById<Button>(R.id.add_custom_order)
-
-        makeOrder.setOnClickListener {
+        binding.addCustomOrder.setOnClickListener {
             //verify data
-            viewModel.makeOrder(descriptionEditText.text.toString())
-            descriptionEditText.text = null
+            viewModel.makeOrder(binding.bouquetDescriptionCustomBouquet.text.toString())
+            binding.bouquetDescriptionCustomBouquet.text = null
             Toast.makeText(context, "thx", Toast.LENGTH_SHORT).show()
         }
+        return binding.root
+    }
+}
 /*
         val bouquetDescription =
             rootView.findViewById<EditText>(R.id.bouquet_description_custom_bouquet)
@@ -65,6 +57,3 @@ class AddFragment : Fragment() {
             toast.setGravity(Gravity.CENTER, 0, 0)
             toast.show()
         }*/
-        return rootView
-    }
-}

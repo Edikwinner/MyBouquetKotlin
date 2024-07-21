@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/app_navigation"
+    app:startDestination="@id/homeFragment">
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.example.mybouquetkotlin.View.Fragments.HomeFragment"
+        android:label="fragment_home"
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_homeFragment_to_descriptionFragment"
+            app:destination="@id/descriptionFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/favouriteFragment"
+        android:name="com.example.mybouquetkotlin.View.Fragments.FavouriteFragment"
+        android:label="fragment_favourite"
+        tools:layout="@layout/fragment_favourite" >
+        <action
+            android:id="@+id/action_favouriteFragment_to_descriptionFragment"
+            app:destination="@id/descriptionFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/addFragment"
+        android:name="com.example.mybouquetkotlin.View.Fragments.AddFragment"
+        android:label="fragment_add"
+        tools:layout="@layout/fragment_add" />
+    <fragment
+        android:id="@+id/shoppingCardFragment"
+        android:name="com.example.mybouquetkotlin.View.Fragments.ShoppingCardFragment"
+        android:label="fragment_shopping_card"
+        tools:layout="@layout/fragment_shopping_card" >
+        <action
+            android:id="@+id/action_shoppingCardFragment_to_descriptionFragment"
+            app:destination="@id/descriptionFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="com.example.mybouquetkotlin.View.Fragments.LoginFragment"
+        android:label="fragment_login"
+        tools:layout="@layout/fragment_login" />
+    <fragment
+        android:id="@+id/userFragment"
+        android:name="com.example.mybouquetkotlin.View.Fragments.UserFragment"
+        android:label="fragment_user"
+        tools:layout="@layout/fragment_user" />
+    <fragment
+        android:id="@+id/descriptionFragment"
+        android:name="com.example.mybouquetkotlin.View.Fragments.DescriptionFragment"
+        android:label="fragment_description"
+        tools:layout="@layout/fragment_description" />
+</navigation>

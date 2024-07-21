@@ -1,192 +1,103 @@
 package com.example.mybouquetkotlin.View.Fragments
 
-import android.content.DialogInterface
 import android.os.Bundle
 import android.util.Log
-import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.ImageButton
-import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.GridLayoutManager
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.recyclerview.widget.ItemTouchHelper.LEFT
+import androidx.recyclerview.widget.ItemTouchHelper.RIGHT
+import androidx.recyclerview.widget.ItemTouchHelper.SimpleCallback
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.mybouquetkotlin.Model.Adapters.HomeScreenAdapter
-import com.example.mybouquetkotlin.R
-import com.example.mybouquetkotlin.Model.Entity.Card
-import com.example.mybouquetkotlin.Model.Cards
 import com.example.mybouquetkotlin.Model.Adapters.ShoppingCartScreenAdapter
+import com.example.mybouquetkotlin.Model.Entity.Card
+import com.example.mybouquetkotlin.R
 import com.example.mybouquetkotlin.ViewModel.Fragments.ShoppingCardViewModel
-import com.google.android.material.button.MaterialButton
+import com.example.mybouquetkotlin.databinding.FragmentShoppingCardBinding
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.google.firebase.auth.FirebaseAuth
 
-class ShoppingCardFragment() : Fragment(), ShoppingCartScreenAdapter.customOnClickListener {
-    private lateinit var viewModel:ShoppingCardViewModel
-
-    /*var totalCost: Int = 0
-    private lateinit var totalCostTextView: TextView
-    private var cards: Cards? = null
-    private var firebaseAuth: FirebaseAuth? = null
-    private lateinit var recyclerView: RecyclerView
-    private lateinit var shoppingCartScreenAdapter: ShoppingCartScreenAdapter*/
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
-
+class ShoppingCardFragment : Fragment(), ShoppingCartScreenAdapter.customOnClickListener {
+    private lateinit var viewModel: ShoppingCardViewModel
+    private lateinit var adapter: ShoppingCartScreenAdapter
+    private lateinit var binding: FragmentShoppingCardBinding
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val rootView: View = inflater.inflate(R.layout.fragment_shopping_card, container, false)
+        binding = FragmentShoppingCardBinding.inflate(inflater)
         viewModel = ViewModelProvider(this)[ShoppingCardViewModel::class.java]
-        val recyclerView = rootView.findViewById<RecyclerView>(R.id.shopping_card_recycler_view)
-        val makeOrderButton = rootView.findViewById<Button>(R.id.make_order)
-        val deleteAllButton = rootView.findViewById<View>(R.id.delete_all_shopping_cart)
-        val totalCostTextView = rootView.findViewById<TextView>(R.id.total_cost_in_shopping_cart)
+
+        viewModel.refreshData()
 
         viewModel.totalSum.observe(viewLifecycleOwner, Observer {
-            totalCostTextView.text = it.toString()
+            binding.totalCostInShoppingCart.text = "$it ₽"
         })
-        recyclerView.setLayoutManager(LinearLayoutManager(context))
+        binding.shoppingCardRecyclerView.setLayoutManager(LinearLayoutManager(context))
+        adapter = ShoppingCartScreenAdapter(viewModel.shoppingCards.value ?: ArrayList<Card>(), this)
+        getItemTouchHelper().attachToRecyclerView(binding.shoppingCardRecyclerView)
+        binding.shoppingCardRecyclerView.adapter = adapter
         viewModel.shoppingCards.observe(viewLifecycleOwner, Observer {
-            if(it != null){
-                recyclerView.adapter = ShoppingCartScreenAdapter(it)
+            var sum = 0
+            for (card in it){
+                sum += card.bouquetCost
             }
-
+            viewModel.totalSum.value = sum
+            adapter = ShoppingCartScreenAdapter(it, this)
+            binding.shoppingCardRecyclerView.adapter = adapter
         })
+        val cardsTouchHelper: ItemTouchHelper? = null
+        cardsTouchHelper?.attachToRecyclerView(binding.shoppingCardRecyclerView)
 
-        makeOrderButton.setOnClickListener {
-
-        }
-
-        deleteAllButton.setOnClickListener{
-
-        }
-
-
-        return rootView
-    }
-
-    override fun deleteCard(card: Card?) {
-
-    }
-}
-     /*   totalCost = 0
-        if (cards!!.UID == null) {
-            val toast: Toast = Toast.makeText(
-                getContext(),
-                "Для просмотра корзины необходимо зарегистрироваться",
-                Toast.LENGTH_SHORT
-            )
-            toast.setGravity(Gravity.CENTER, 0, 0)
-            toast.show()
-        }
-
-        totalCostTextView = rootView.findViewById(R.id.total_cost_in_shopping_cart)
-
-        firebaseAuth = cards!!.firebaseAuth
-
-
-
-        recyclerView.setLayoutManager(LinearLayoutManager(getContext()))
-
-        for (card: Card? in cards!!.toShoppingCartCards) {
-            totalCost += card!!.bouquetCost
-        }
-        totalCostTextView.setText(totalCost.toString() + " ₽")
-        shoppingCartScreenAdapter = ShoppingCartScreenAdapter(cards!!.toShoppingCartCards)
-        shoppingCartScreenAdapter!!.setListener(object :
-            ShoppingCartScreenAdapter.customOnClickListener {
-            override fun deleteCard(card: Card?) {
-                deleteCard(card)
+        binding.makeOrder.setOnClickListener {
+            val paths = ArrayList<String>()
+            viewModel.shoppingCards.value!!.forEach {
+                paths.add(it.path)
             }
-        })
-        recyclerView.setAdapter(shoppingCartScreenAdapter)
-        val cardsTouchHelper: ItemTouchHelper = getItemTouchHelper(shoppingCartScreenAdapter!!)
-        cardsTouchHelper.attachToRecyclerView(recyclerView)
+            viewModel.makeOrder(paths)
+            viewModel.deleteCards()
+        }
 
-        rootView.findViewById<View>(R.id.delete_all_shopping_cart)
-            .setOnClickListener(object : View.OnClickListener {
-                override fun onClick(v: View) {
-                    val builder: MaterialAlertDialogBuilder =
-                        MaterialAlertDialogBuilder(requireContext())
-                    builder.setTitle("Подтверждение")
-                        .setMessage("Вы уверены что хотите очистить корзину?")
-                        .setIcon(getResources().getDrawable(android.R.drawable.ic_dialog_alert))
-                        .setPositiveButton("Да", object : DialogInterface.OnClickListener {
-                            override fun onClick(dialog: DialogInterface, which: Int) {
-                                deleteAll()
-                            }
-                        }).setNegativeButton("Отмена", object : DialogInterface.OnClickListener {
-                            override fun onClick(dialog: DialogInterface, which: Int) {
-                                dialog.dismiss()
-                            }
-                        })
-                    val dialog: AlertDialog = builder.create()
-                    dialog.show()
+        binding.deleteAllShoppingCart.setOnClickListener {
+            val builder = MaterialAlertDialogBuilder(requireContext())
+            builder.setTitle("Подтверждение")
+                .setMessage("Вы уверены что хотите очистить корзину?")
+                .setIcon(resources.getDrawable(android.R.drawable.ic_dialog_alert))
+                .setPositiveButton("Да") { dialog, which ->
+                    viewModel.deleteCards()
+                }.setNegativeButton("Отмена") { dialog, which ->
+                    dialog.dismiss()
                 }
-            })
-
-        rootView.findViewById<View>(R.id.make_order)
-            .setOnClickListener(object : View.OnClickListener {
-                override fun onClick(v: View) {
-                    if (cards!!.phoneNumber === "" || cards!!.phoneNumber == null) {
-                        Toast.makeText(
-                            getContext(),
-                            "Заполните Ваш номер телефона",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    } else {
-                        val builder: MaterialAlertDialogBuilder =
-                            MaterialAlertDialogBuilder(requireContext())
-                        builder.setTitle("Спасибо за заказ")
-                        builder.setMessage("В ближайшее время Вам перезвонит наш менеджер")
-                        builder.setNeutralButton("OK", object : DialogInterface.OnClickListener {
-                            override fun onClick(dialog: DialogInterface, which: Int) {
-                                dialog.dismiss()
-                            }
-                        })
-                        val dialog: AlertDialog = builder.create()
-                        dialog.show()
-                        for (card: Card? in cards!!.toShoppingCartCards) {
-                            cards!!.addOrder(card!!.path)
-                        }
-                        deleteAll()
-                    }
-                }
-            })
-        return rootView
+            val dialog: AlertDialog = builder.create()
+            dialog.show()
+        }
+        return binding.root
     }
 
-    private fun deleteCard(card: Card?) {
+    override fun deleteCard(card: Card) {
         Log.i("TAG", "deleteCard: ")
-        cards!!.deleteCardFromShoppingCards(card)
-        shoppingCartScreenAdapter!!.notifyDataSetChanged()
-        totalCost -= card!!.bouquetCost
-        totalCostTextView!!.setText(totalCost.toString() + " ₽")
+        adapter.notifyDataSetChanged()
+        viewModel.totalSum.value = viewModel.totalSum.value!! - card.bouquetCost
+        viewModel.deleteCard(card)
     }
 
-    private fun deleteAll() {
-        Log.i("TAG", (cards!!.UID)!!)
-        cards!!.deleteAllFromShoppingCards()
-        shoppingCartScreenAdapter!!.notifyDataSetChanged()
-        totalCostTextView!!.setText("0 ₽")
+    override fun onCardViewClicked(card: Card) {
+        val bundle = Bundle()
+        bundle.putSerializable("card", card)
+        binding.root.findNavController().navigate(R.id.action_shoppingCardFragment_to_descriptionFragment, bundle)
+        Log.i("TAG", "onCardViewClicked: ")
     }
 
-    private fun getItemTouchHelper(adapter: ShoppingCartScreenAdapter): ItemTouchHelper {
-        val simpleItemTouchCallback
-                : ItemTouchHelper.SimpleCallback = object : ItemTouchHelper.SimpleCallback(
+    private fun getItemTouchHelper(): ItemTouchHelper {
+        val simpleItemTouchCallback = object : SimpleCallback(
             0,
-            ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT
+            LEFT or RIGHT
         ) {
             override fun onMove(
                 recyclerView: RecyclerView,
@@ -196,11 +107,15 @@ class ShoppingCardFragment() : Fragment(), ShoppingCartScreenAdapter.customOnCli
                 return false
             }
 
-            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, swipeDir: Int) {
+            override fun onSwiped(
+                viewHolder: RecyclerView.ViewHolder,
+                swipeDir: Int
+            ) {
                 val position: Int = viewHolder.getAdapterPosition()
-                val card: Card? = cards!!.toShoppingCartCards.get(position)
+                val card: Card = viewModel.shoppingCards.value!![position]
                 deleteCard(card)
             }
         }
-
-        return ItemTouchHelper(simpleItemTouchCallback)*/
+        return ItemTouchHelper(simpleItemTouchCallback)
+    }
+}

@@ -35,20 +35,22 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
+    buildFeatures{
+        viewBinding = true
+    }
 }
 
 dependencies {
-
+    //nav
     val navigationVersion = "2.7.7"
     implementation("androidx.navigation:navigation-fragment-ktx:$navigationVersion")
-    implementation("androidx.navigation:navigation-ui-ktx:navigationVersion")
-    implementation("androidx.navigation:navigation-dynamic-features-fragment:navigationVersion")
+    implementation("androidx.navigation:navigation-ui-ktx:$navigationVersion")
+    implementation("androidx.navigation:navigation-dynamic-features-fragment:$navigationVersion")
 
     //Lifecycle
-    val lifecycleVersion = "2.7.0"
+    val lifecycleVersion = "2.8.3"
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycleVersion")
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:$lifecycleVersion")
-    implementation("androidx.lifecycle:lifecycle-runtime-ktx:$lifecycleVersion")
 
     //Retrofit
     val retrofitVersion = "2.9.0"

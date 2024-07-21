@@ -12,8 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="170dp"
         app:contentPadding="10dp"
-        app:cardCornerRadius="20dp"
-        app:cardBackgroundColor="@color/cardview_light_background">
+        app:cardCornerRadius="20dp">
         <LinearLayout
             android:gravity="center"
             android:layout_width="match_parent"
@@ -33,7 +32,7 @@
                 android:orientation="vertical">
 
                 <TextView
-                    android:paddingHorizontal="10dp"
+                    android:paddingHorizontal="5dp"
                     android:textStyle="bold"
                     android:textSize="18sp"
                     android:gravity="center"

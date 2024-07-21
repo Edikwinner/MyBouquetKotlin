@@ -5,30 +5,84 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.ImageButton
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import com.example.mybouquetkotlin.R
+import androidx.navigation.findNavController
 import com.example.mybouquetkotlin.Model.Entity.Card
-import com.example.mybouquetkotlin.Model.Cards
+import com.example.mybouquetkotlin.R
 import com.example.mybouquetkotlin.ViewModel.Fragments.DescriptionViewModel
+import com.example.mybouquetkotlin.databinding.FragmentDescriptionBinding
 import com.squareup.picasso.Picasso
 
-class DescriptionFragment() : Fragment() {
+class DescriptionFragment : Fragment() {
     private lateinit var viewModel:DescriptionViewModel
+    private lateinit var binding: FragmentDescriptionBinding
+    private lateinit var card: Card
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        card = requireArguments().get("card") as Card
     }
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val rootView: View = inflater.inflate(R.layout.fragment_description, container, false)
+        binding = FragmentDescriptionBinding.inflate(inflater)
         viewModel = ViewModelProvider(this)[DescriptionViewModel::class.java]
+        binding.toolbar.setNavigationOnClickListener {
+            binding.root.findNavController().popBackStack()
+        }
+        binding.bouquetDescription.text = card.bouquetDescription
+        binding.bouquetNameDescription.text = card.bouquetName
+        Picasso.get().load(Uri.parse(card.bouquetImage)).into(binding.bouquetImageDescription)
+        binding.addToShoppingCartDescription.text = card.bouquetCost.toString() + " ₽"
+
+        binding.addToShoppingCartDescription.setOnClickListener {
+            viewModel.addToShoppingCards(card)
+            viewModel.shoppingCards.observe(viewLifecycleOwner, Observer {
+                if(!it.contains(card)){
+                    binding.addToShoppingCartDescription.text = card.bouquetCost.toString() + " ₽"
+                }
+                else{
+                    binding.addToShoppingCartDescription.text = "Удалить"
+                }
+            })
+
+        }
+
+        binding.addToFavouriteDescription.setOnClickListener{
+            viewModel.addToFavouriteCards(card)
+            viewModel.favouriteCards.observe(viewLifecycleOwner, Observer {
+                if(!it.contains(card)){
+                    binding.addToFavouriteDescription.setImageResource(R.drawable.favorite)
+                }
+                else{
+                    binding.addToFavouriteDescription.setImageResource(R.drawable.favourite_clicked)
+                }
+            })
+        }
+
+        viewModel.favouriteCards.observe(viewLifecycleOwner, Observer {
+            if(card in it){
+                binding.addToFavouriteDescription.setImageResource(R.drawable.favourite_clicked)
+            }
+            else{
+                binding.addToFavouriteDescription.setImageResource(R.drawable.favorite)
+            }
+        })
+
+        viewModel.shoppingCards.observe(viewLifecycleOwner, Observer {
+            if(card in it){
+                binding.addToShoppingCartDescription.text = "Удалить"
+            }
+            else{
+                binding.addToShoppingCartDescription.text = card.bouquetCost.toString() + " ₽"
+            }
+        })
+        return binding.root
+    }
+}
+
        /* val bouquetName: TextView = rootView.findViewById(R.id.bouquet_name_description)
         val bouquetDescription: TextView = rootView.findViewById(R.id.bouquet_description)
         val bouquetImage: ImageView = rootView.findViewById(R.id.bouquet_image_description)
@@ -127,6 +181,3 @@ class DescriptionFragment() : Fragment() {
 
 
 */
-        return rootView
-    }
-}

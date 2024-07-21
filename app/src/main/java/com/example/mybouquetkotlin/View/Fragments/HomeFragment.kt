@@ -10,38 +10,73 @@ import android.widget.ImageButton
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.example.mybouquetkotlin.R
-import com.example.mybouquetkotlin.Model.Entity.Card
 import com.example.mybouquetkotlin.Model.Adapters.HomeScreenAdapter
-import com.example.mybouquetkotlin.ViewModel.Activities.MainActivityViewModel
+import com.example.mybouquetkotlin.Model.Entity.Card
+import com.example.mybouquetkotlin.R
 import com.example.mybouquetkotlin.ViewModel.Fragments.HomeViewModel
+import com.example.mybouquetkotlin.databinding.FragmentHomeBinding
 
-class HomeFragment() : Fragment(), HomeScreenAdapter.customListener{
-    private lateinit var viewModel: MainActivityViewModel
-
+class HomeFragment : Fragment(), HomeScreenAdapter.customListener{
+    private lateinit var viewModel: HomeViewModel
+    private lateinit var adapter: HomeScreenAdapter
+    private lateinit var binding: FragmentHomeBinding
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        val rootView = inflater.inflate(R.layout.fragment_home, container, false)
-        viewModel = ViewModelProvider(this)[MainActivityViewModel::class.java]
-        val recyclerView = rootView.findViewById<RecyclerView>(R.id.home_screen_recycler_view)
-        recyclerView.layoutManager = GridLayoutManager(context, 2)
-        return rootView
+    ): View {
+        binding = FragmentHomeBinding.inflate(inflater)
+        viewModel = ViewModelProvider(this)[HomeViewModel::class.java]
+        viewModel.refreshData()
+        adapter = HomeScreenAdapter(viewModel.cards.value ?: ArrayList(), this, viewModel)
+        binding.homeScreenRecyclerView.adapter = adapter
+        viewModel.cards.observe(viewLifecycleOwner, Observer {
+            adapter = HomeScreenAdapter(it, this, viewModel)
+            binding.homeScreenRecyclerView.adapter = adapter
+        })
+        binding.homeScreenRecyclerView.layoutManager = GridLayoutManager(context, 2)
+        return binding.root
     }
 
     override fun onFavouriteButtonClicked(card: Card, button: ImageButton) {
-        Log.i("TAG", "onFavouriteButtonClicked: ")
+        if (viewModel.currentUser.value != null) {
+            viewModel.addToFavouriteCards(card)
+            viewModel.favouriteCards.observe(viewLifecycleOwner, Observer {
+                if (!it.contains(card)) {
+                    button.setImageResource(R.drawable.favorite)
+                } else {
+                    button.setImageResource(R.drawable.favourite_clicked)
+                }
+            })
+        }
+        else{
+            Log.i("TAG", "no")
+        }
     }
 
-    override fun onAddToShoppingCartClicked(card: Card, button: Button, button2: Button) {
-
+    override fun onAddToShoppingCartClicked(card: Card, button: Button) {
+        if(viewModel.currentUser.value != null){
+            viewModel.addToShoppingCards(card)
+            viewModel.shoppingCards.observe(viewLifecycleOwner, Observer {
+                if(!it.contains(card)){
+                    button.text = card.bouquetCost.toString() + " ₽"
+                }
+                else{
+                    button.text = "Удалить"
+                }
+            })
+        }
+        else{
+            Log.i("TAG", "no ")
+        }
     }
 
     override fun onCardViewClicked(card: Card) {
-
+        val bundle = Bundle()
+        bundle.putSerializable("card", card)
+        binding.root.findNavController().navigate(R.id.action_homeFragment_to_descriptionFragment, bundle)
+        Log.i("TAG", "onCardViewClicked: ")
     }
 
 }

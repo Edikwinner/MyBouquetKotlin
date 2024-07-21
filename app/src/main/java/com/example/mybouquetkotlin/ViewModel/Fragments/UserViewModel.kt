@@ -3,25 +3,35 @@ package com.example.mybouquetkotlin.ViewModel.Fragments
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.mybouquetkotlin.Model.Entity.Card
+import com.example.mybouquetkotlin.Model.Entity.User
 import com.example.mybouquetkotlin.Model.Repository.CardRepository
-import com.example.mybouquetkotlin.ViewModel.Activities.MainActivityViewModel
 import kotlinx.coroutines.launch
 
 class UserViewModel: ViewModel() {
     val cardRepository = CardRepository()
-    val mainActivityViewModel = MainActivityViewModel()
+    val currentUser = MutableLiveData<User?>()
+    init {
+        viewModelScope.launch {
+            currentUser.value = cardRepository.getUser()
+        }
+    }
     fun logOff(){
-        val scope = viewModelScope.launch {
+        viewModelScope.launch {
             cardRepository.signOff()
-            mainActivityViewModel.currentUser.value = null
+            currentUser.value = null
         }
     }
 
     fun savePhoneNumber(phoneNumber: String){
-        val scope = viewModelScope.launch {
+        viewModelScope.launch {
             cardRepository.saveUserNumber(phoneNumber)
-            mainActivityViewModel.currentUser.value!!.phoneNumber = phoneNumber
+            currentUser.value!!.phoneNumber = phoneNumber
+        }
+    }
+
+    fun refreshData(){
+        viewModelScope.launch {
+            currentUser.value = cardRepository.getUser()
         }
     }
 

@@ -12,8 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:contentPadding="10dp"
-        app:cardCornerRadius="20dp"
-        app:cardBackgroundColor="@color/cardview_light_background">
+        app:cardCornerRadius="20dp">
         <LinearLayout
             android:gravity="center"
             android:layout_width="match_parent"
@@ -48,28 +47,14 @@
                     android:layout_height="wrap_content"
                     android:padding="5dp"
                     app:cornerRadius="10dp" />
-                <Button
-                    android:visibility="gone"
-                    android:layout_weight="1"
-                    android:textSize="14sp"
-                    android:gravity="center"
-                    android:text="Удалить"
-                    android:id="@+id/bouquet_cost_recycler_view_item_false"
-                    android:backgroundTint="@color/cardview_dark_background"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:padding="5dp"
-                    app:cornerRadius="10dp" />
-
                 <ImageButton
-                    android:visibility="visible"
                     android:layout_gravity="center"
                     android:id="@+id/add_to_favourite"
                     android:src="@drawable/favorite"
                     android:backgroundTint="@android:color/transparent"
                     android:scaleType="center"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"/>
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"/>
             </LinearLayout>
         </LinearLayout>
     </androidx.cardview.widget.CardView>
