@@ -10,6 +10,7 @@ import androidx.lifecycle.Observer
 import androidx.navigation.findNavController
 import com.example.mybouquetkotlin.Model.Entity.Card
 import com.example.mybouquetkotlin.R
+import com.example.mybouquetkotlin.ViewModel.Fragments.AddViewModel
 import com.example.mybouquetkotlin.ViewModel.Fragments.DescriptionViewModel
 import com.example.mybouquetkotlin.databinding.FragmentDescriptionBinding
 import com.squareup.picasso.Picasso

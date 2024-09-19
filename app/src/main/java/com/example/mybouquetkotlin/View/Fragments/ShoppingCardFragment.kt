@@ -19,6 +19,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.mybouquetkotlin.Model.Adapters.ShoppingCartScreenAdapter
 import com.example.mybouquetkotlin.Model.Entity.Card
 import com.example.mybouquetkotlin.R
+import com.example.mybouquetkotlin.ViewModel.Fragments.AddViewModel
 import com.example.mybouquetkotlin.ViewModel.Fragments.ShoppingCardViewModel
 import com.example.mybouquetkotlin.databinding.FragmentShoppingCardBinding
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
