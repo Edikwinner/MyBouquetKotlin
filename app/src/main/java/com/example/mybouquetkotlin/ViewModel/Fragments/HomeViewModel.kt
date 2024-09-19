@@ -7,7 +7,6 @@ import androidx.lifecycle.viewModelScope
 import com.example.mybouquetkotlin.Model.Entity.Card
 import com.example.mybouquetkotlin.Model.Entity.User
 import com.example.mybouquetkotlin.Model.Repository.CardRepository
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 class HomeViewModel(val cardRepository: CardRepository):ViewModel(){
