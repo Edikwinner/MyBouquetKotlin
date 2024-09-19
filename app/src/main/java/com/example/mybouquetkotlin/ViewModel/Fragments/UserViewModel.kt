@@ -7,8 +7,7 @@ import com.example.mybouquetkotlin.Model.Entity.User
 import com.example.mybouquetkotlin.Model.Repository.CardRepository
 import kotlinx.coroutines.launch
 
-class UserViewModel: ViewModel() {
-    val cardRepository = CardRepository()
+class UserViewModel(val cardRepository: CardRepository): ViewModel() {
     val currentUser = MutableLiveData<User?>()
     init {
         viewModelScope.launch {

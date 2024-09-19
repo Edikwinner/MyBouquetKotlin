@@ -9,17 +9,16 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.mybouquetkotlin.ViewModel.Fragments.AddViewModel
 import com.example.mybouquetkotlin.databinding.FragmentAddBinding
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class AddFragment : Fragment() {
-    private lateinit var viewModel:AddViewModel
+    private val viewModel by viewModel<AddViewModel>()
     private lateinit var binding: FragmentAddBinding
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentAddBinding.inflate(inflater)
-        viewModel = ViewModelProvider(this)[AddViewModel::class.java]
-
         binding.addCustomOrder.setOnClickListener {
             //verify data
             viewModel.makeOrder(binding.bouquetDescriptionCustomBouquet.text.toString())

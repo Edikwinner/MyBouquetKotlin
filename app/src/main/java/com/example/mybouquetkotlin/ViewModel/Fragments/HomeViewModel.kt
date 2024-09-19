@@ -10,9 +10,7 @@ import com.example.mybouquetkotlin.Model.Repository.CardRepository
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
-class HomeViewModel:ViewModel(){
-
-    private val cardRepository = CardRepository()
+class HomeViewModel(val cardRepository: CardRepository):ViewModel(){
 
     val currentUser = MutableLiveData<User?>()
     val cards =  MutableLiveData<List<Card>>()
