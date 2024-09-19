@@ -11,24 +11,29 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import com.example.mybouquetkotlin.Model.Entity.Card
 import com.example.mybouquetkotlin.R
+import com.example.mybouquetkotlin.ViewModel.Fragments.AddViewModel
 import com.example.mybouquetkotlin.ViewModel.Fragments.DescriptionViewModel
 import com.example.mybouquetkotlin.databinding.FragmentDescriptionBinding
 import com.squareup.picasso.Picasso
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class DescriptionFragment : Fragment() {
-    private lateinit var viewModel:DescriptionViewModel
+    private val viewModel by viewModel<DescriptionViewModel>()
     private lateinit var binding: FragmentDescriptionBinding
     private lateinit var card: Card
+    private var isFavourite = false
+    private var isShopping = false
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         card = requireArguments().get("card") as Card
+        isShopping = requireArguments().getBoolean("shopping")
+        isFavourite = requireArguments().getBoolean("favourite")
     }
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentDescriptionBinding.inflate(inflater)
-        viewModel = ViewModelProvider(this)[DescriptionViewModel::class.java]
         binding.toolbar.setNavigationOnClickListener {
             binding.root.findNavController().popBackStack()
         }
@@ -62,122 +67,21 @@ class DescriptionFragment : Fragment() {
             })
         }
 
-        viewModel.favouriteCards.observe(viewLifecycleOwner, Observer {
-            if(card in it){
-                binding.addToFavouriteDescription.setImageResource(R.drawable.favourite_clicked)
-            }
-            else{
-                binding.addToFavouriteDescription.setImageResource(R.drawable.favorite)
-            }
-        })
+        if(isFavourite){
+            binding.addToFavouriteDescription.setImageResource(R.drawable.favourite_clicked)
+        }
+        else{
+            binding.addToFavouriteDescription.setImageResource(R.drawable.favorite)
+        }
 
-        viewModel.shoppingCards.observe(viewLifecycleOwner, Observer {
-            if(card in it){
-                binding.addToShoppingCartDescription.text = "Удалить"
-            }
-            else{
-                binding.addToShoppingCartDescription.text = card.bouquetCost.toString() + " ₽"
-            }
-        })
+
+        if(isShopping){
+            binding.addToShoppingCartDescription.text = "Удалить"
+        }
+        else{
+            binding.addToShoppingCartDescription.text = card.bouquetCost.toString() + " ₽"
+        }
+
         return binding.root
     }
 }
-
-       /* val bouquetName: TextView = rootView.findViewById(R.id.bouquet_name_description)
-        val bouquetDescription: TextView = rootView.findViewById(R.id.bouquet_description)
-        val bouquetImage: ImageView = rootView.findViewById(R.id.bouquet_image_description)
-
-        val addToFavourite: ImageButton = rootView.findViewById(R.id.add_to_favourite_description)
-        val removeFromFavourite: ImageButton =
-            rootView.findViewById(R.id.remove_from_favourite_description)
-        val addToShoppingCart: Button = rootView.findViewById(R.id.add_to_shopping_cart_description)
-        val addToShoppingCartTrue: Button =
-            rootView.findViewById(R.id.add_to_shopping_cart_description_true)
-
-        for (card1: Card? in cards!!.favouriteCards) {
-            if (card1 === card) {
-                isLiked = true
-                break
-            }
-        }
-
-        for (card2: Card? in cards!!.toShoppingCartCards) {
-            if (card2 === card) {
-                isShop = true
-                break
-            }
-        }
-
-        if (isLiked) {
-            addToFavourite.setVisibility(View.GONE)
-            removeFromFavourite.setVisibility(View.VISIBLE)
-        } else {
-            removeFromFavourite.setVisibility(View.GONE)
-            addToFavourite.setVisibility(View.VISIBLE)
-        }
-        if (isShop) {
-            addToShoppingCart.setVisibility(View.GONE)
-            addToShoppingCartTrue.setVisibility(View.VISIBLE)
-        } else {
-            addToShoppingCartTrue.setVisibility(View.GONE)
-            addToShoppingCart.setVisibility(View.VISIBLE)
-        }
-
-        bouquetName.setText(card!!.bouquetName)
-        bouquetDescription.setText(card!!.bouquetDescription)
-        addToShoppingCart.setText(card!!.bouquetCost.toString() + " ₽")
-        Picasso.get().load(Uri.parse(card!!.bouquetImage)).into(bouquetImage)
-
-        rootView.findViewById<View>(R.id.return_to_fragment)
-            .setOnClickListener(object : View.OnClickListener {
-                override fun onClick(v: View) {
-                    if (fragment === "home") {
-                        val homeFragment: HomeFragment = HomeFragment()
-                        val homeBundle: Bundle = Bundle()
-                        homeBundle.putSerializable("cards", cards)
-                        homeFragment.setArguments(homeBundle)
-                        requireActivity().getSupportFragmentManager().beginTransaction()
-                            .replace(R.id.fragment, homeFragment).commit()
-                    } else if (fragment === "fav") {
-                        val favouriteFragment: FavouriteFragment = FavouriteFragment()
-                        val favouriteBundle: Bundle = Bundle()
-                        favouriteBundle.putSerializable("cards", cards)
-                        favouriteFragment.setArguments(favouriteBundle)
-                        requireActivity().getSupportFragmentManager().beginTransaction()
-                            .replace(R.id.fragment, favouriteFragment).commit()
-                    }
-                }
-            })
-        addToShoppingCart.setOnClickListener(object : View.OnClickListener {
-            override fun onClick(v: View) {
-                cards!!.addCardToShoppingCards(card)
-                addToShoppingCart.setVisibility(View.GONE)
-                addToShoppingCartTrue.setVisibility(View.VISIBLE)
-            }
-        })
-
-        addToShoppingCartTrue.setOnClickListener(object : View.OnClickListener {
-            override fun onClick(v: View) {
-                cards!!.deleteCardFromShoppingCards(card)
-                addToShoppingCartTrue.setVisibility(View.GONE)
-                addToShoppingCart.setVisibility(View.VISIBLE)
-            }
-        })
-
-        addToFavourite.setOnClickListener(object : View.OnClickListener {
-            override fun onClick(v: View) {
-                cards!!.addCardToFavouriteCards(card)
-                addToFavourite.setVisibility(View.GONE)
-                removeFromFavourite.setVisibility(View.VISIBLE)
-            }
-        })
-        removeFromFavourite.setOnClickListener(object : View.OnClickListener {
-            override fun onClick(v: View) {
-                cards!!.deleteCardFromFavouriteCards(card)
-                removeFromFavourite.setVisibility(View.GONE)
-                addToFavourite.setVisibility(View.VISIBLE)
-            }
-        })
-
-
-*/

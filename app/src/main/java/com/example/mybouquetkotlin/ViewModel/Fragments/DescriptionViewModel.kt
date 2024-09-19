@@ -8,8 +8,7 @@ import com.example.mybouquetkotlin.Model.Entity.Card
 import com.example.mybouquetkotlin.Model.Repository.CardRepository
 import kotlinx.coroutines.launch
 
-class DescriptionViewModel: ViewModel() {
-    val cardRepository = CardRepository()
+class DescriptionViewModel(val cardRepository: CardRepository): ViewModel() {
     val favouriteCards = MutableLiveData<ArrayList<Card>>()
     val shoppingCards = MutableLiveData<ArrayList<Card>>()
 

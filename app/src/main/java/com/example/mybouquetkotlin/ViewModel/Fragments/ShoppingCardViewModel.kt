@@ -8,17 +8,18 @@ import com.example.mybouquetkotlin.Model.Entity.User
 import com.example.mybouquetkotlin.Model.Repository.CardRepository
 import kotlinx.coroutines.launch
 
-class ShoppingCardViewModel: ViewModel(){
+class ShoppingCardViewModel(val cardRepository: CardRepository): ViewModel(){
 
     val totalSum = MutableLiveData<Int>()
-    val cardRepository = CardRepository()
     val currentUser = MutableLiveData<User?>()
     val shoppingCards = MutableLiveData<ArrayList<Card>>(ArrayList())
+    val favouriteCards = MutableLiveData<ArrayList<Card>>(ArrayList())
 
     init {
         viewModelScope.launch {
             currentUser.value = cardRepository.getUser()
             shoppingCards.value = cardRepository.getShoppingCards(currentUser.value)
+            favouriteCards.value = cardRepository.getFavouriteCards(currentUser.value)
         }
     }
 
@@ -45,6 +46,7 @@ class ShoppingCardViewModel: ViewModel(){
         viewModelScope.launch {
             currentUser.value = cardRepository.getUser()
             shoppingCards.value = cardRepository.getShoppingCards(currentUser.value)
+            favouriteCards.value = cardRepository.getFavouriteCards(currentUser.value)
         }
     }
 }

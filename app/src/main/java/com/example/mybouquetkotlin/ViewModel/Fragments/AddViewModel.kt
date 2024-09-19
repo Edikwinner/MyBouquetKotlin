@@ -5,8 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.mybouquetkotlin.Model.Repository.CardRepository
 import kotlinx.coroutines.launch
 
-class AddViewModel:ViewModel() {
-    val cardRepository = CardRepository()
+class AddViewModel(val cardRepository: CardRepository):ViewModel() {
 
     fun makeOrder(description: String){
         viewModelScope.launch {

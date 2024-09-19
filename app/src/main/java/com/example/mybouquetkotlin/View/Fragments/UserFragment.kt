@@ -10,11 +10,14 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.example.mybouquetkotlin.R
+import com.example.mybouquetkotlin.ViewModel.Fragments.AddViewModel
 import com.example.mybouquetkotlin.ViewModel.Fragments.UserViewModel
 import com.example.mybouquetkotlin.databinding.FragmentUserBinding
+import com.google.firebase.firestore.auth.User
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class UserFragment : Fragment() {
-    private lateinit var viewModel:UserViewModel
+    private val viewModel by viewModel<UserViewModel>()
     private lateinit var binding: FragmentUserBinding
 
     override fun onCreateView(
@@ -23,7 +26,6 @@ class UserFragment : Fragment() {
     ): View {
         binding = FragmentUserBinding.inflate(inflater)
         Log.i("TAG", "created")
-        viewModel = ViewModelProvider(this)[UserViewModel::class.java]
         viewModel.refreshData()
         viewModel.currentUser.observe(viewLifecycleOwner, Observer {
             if(it != null){

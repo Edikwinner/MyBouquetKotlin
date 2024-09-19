@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -19,12 +20,14 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.mybouquetkotlin.Model.Adapters.ShoppingCartScreenAdapter
 import com.example.mybouquetkotlin.Model.Entity.Card
 import com.example.mybouquetkotlin.R
+import com.example.mybouquetkotlin.ViewModel.Fragments.AddViewModel
 import com.example.mybouquetkotlin.ViewModel.Fragments.ShoppingCardViewModel
 import com.example.mybouquetkotlin.databinding.FragmentShoppingCardBinding
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class ShoppingCardFragment : Fragment(), ShoppingCartScreenAdapter.customOnClickListener {
-    private lateinit var viewModel: ShoppingCardViewModel
+    private val viewModel by viewModel<ShoppingCardViewModel>()
     private lateinit var adapter: ShoppingCartScreenAdapter
     private lateinit var binding: FragmentShoppingCardBinding
     override fun onCreateView(
@@ -32,7 +35,6 @@ class ShoppingCardFragment : Fragment(), ShoppingCartScreenAdapter.customOnClick
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentShoppingCardBinding.inflate(inflater)
-        viewModel = ViewModelProvider(this)[ShoppingCardViewModel::class.java]
 
         viewModel.refreshData()
 
@@ -62,6 +64,7 @@ class ShoppingCardFragment : Fragment(), ShoppingCartScreenAdapter.customOnClick
             }
             viewModel.makeOrder(paths)
             viewModel.deleteCards()
+            Toast.makeText(context, "thx", Toast.LENGTH_SHORT).show()
         }
 
         binding.deleteAllShoppingCart.setOnClickListener {
@@ -90,6 +93,8 @@ class ShoppingCardFragment : Fragment(), ShoppingCartScreenAdapter.customOnClick
     override fun onCardViewClicked(card: Card) {
         val bundle = Bundle()
         bundle.putSerializable("card", card)
+        bundle.putBoolean("favourite", viewModel.favouriteCards.value!!.contains(card))
+        bundle.putBoolean("shopping", viewModel.shoppingCards.value!!.contains(card))
         binding.root.findNavController().navigate(R.id.action_shoppingCardFragment_to_descriptionFragment, bundle)
         Log.i("TAG", "onCardViewClicked: ")
     }
