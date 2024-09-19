@@ -9,7 +9,6 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.ItemTouchHelper.LEFT
@@ -20,7 +19,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.mybouquetkotlin.Model.Adapters.ShoppingCartScreenAdapter
 import com.example.mybouquetkotlin.Model.Entity.Card
 import com.example.mybouquetkotlin.R
-import com.example.mybouquetkotlin.ViewModel.Fragments.AddViewModel
 import com.example.mybouquetkotlin.ViewModel.Fragments.ShoppingCardViewModel
 import com.example.mybouquetkotlin.databinding.FragmentShoppingCardBinding
 import com.google.android.material.dialog.MaterialAlertDialogBuilder

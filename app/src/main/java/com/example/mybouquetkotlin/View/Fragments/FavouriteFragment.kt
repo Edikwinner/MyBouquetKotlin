@@ -9,13 +9,11 @@ import android.widget.Button
 import android.widget.ImageButton
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.mybouquetkotlin.Model.Adapters.HomeScreenAdapter
 import com.example.mybouquetkotlin.Model.Entity.Card
 import com.example.mybouquetkotlin.R
-import com.example.mybouquetkotlin.ViewModel.Fragments.AddViewModel
 import com.example.mybouquetkotlin.ViewModel.Fragments.HomeViewModel
 import com.example.mybouquetkotlin.databinding.FragmentFavouriteBinding
 import org.koin.androidx.viewmodel.ext.android.viewModel
